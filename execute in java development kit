@@ -1,0 +1,65 @@
+// Task.java
+public class Task {
+    private int id;
+    private String description;
+
+    public Task(int id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
+    // Getter and setter methods
+}
+
+
+// TaskAdapter.java
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+    // Implement onCreateViewHolder, onBindViewHolder, and getItemCount methods
+    
+    class TaskViewHolder extends RecyclerView.ViewHolder {
+        private TextView textViewDescription;
+
+        public TaskViewHolder(View itemView) {
+            super(itemView);
+            textViewDescription = itemView.findViewById(R.id.textViewDescription);
+        }
+    }
+}
+
+
+// MainActivity.java
+public class MainActivity extends AppCompatActivity {
+    private EditText editTextTask;
+    private Button buttonAdd;
+    private RecyclerView recyclerViewTasks;
+    private ArrayList<Task> taskList;
+    private TaskAdapter taskAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editTextTask = findViewById(R.id.editTextTask);
+        buttonAdd = findViewById(R.id.buttonAdd);
+        recyclerViewTasks = findViewById(R.id.recyclerViewTasks);
+        
+        taskList = new ArrayList<>();
+        taskAdapter = new TaskAdapter(taskList);
+        recyclerViewTasks.setAdapter(taskAdapter);
+        recyclerViewTasks.setLayoutManager(new LinearLayoutManager(this));
+
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String taskDescription = editTextTask.getText().toString();
+                if (!taskDescription.isEmpty()) {
+                    Task task = new Task(taskList.size(), taskDescription);
+                    taskList.add(task);
+                    taskAdapter.notifyItemInserted(taskList.size() - 1);
+                    editTextTask.setText("");
+                }
+            }
+        });
+    }
+}
